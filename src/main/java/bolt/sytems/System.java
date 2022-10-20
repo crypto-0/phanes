@@ -1,6 +1,10 @@
 package bolt.sytems;
-import bolt.Engine;
+import bolt.World;
 
-public  interface System{
-  void update(long dt, Engine engine);
+public abstract class  System{
+  protected World world;
+  public System(World world){
+    this.world = world;
+  }
+  public abstract void update(long dt);
 }

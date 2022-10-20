@@ -1,25 +1,63 @@
 package bolt;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+import bolt.components.*;
+import bolt.sytems.*;
 public class Game extends JPanel implements Runnable
 {
-  private final int PWIDTH =256;
-  private final int PHEIGHT=240;
+  private World world;
+  private final int PWIDTH;
+  private final int PHEIGHT;
   private Thread animator;
   private volatile boolean running = false;
   private long period = 1000 / 60;
   private int NO_DELAY_PER_YIELD = 10;
 
-  public Game() {
-    setBackground(Color.black);
+  public Game(int  PWIDTH,int PHEIGHT) {
+    this.PWIDTH = PWIDTH;
+    this.PHEIGHT = PHEIGHT;
+    setBackground(Color.white);
     setFocusable(true);
     setPreferredSize(new Dimension(PWIDTH, PHEIGHT));
-
+    world = new World();
   }
 
+  public void init(){
+    world.registerSystem(RenderSystem.class);
+    world.registerSystem(AnimationSystem.class);
+    world.registerComponent(Sprite.class);
+    world.registerComponent(Transform.class);
+    world.registerComponent(Animation.class);
+    Entity entity = world.createEntity();
+    Transform transform = new Transform();
+    transform.scale.x = .3f;
+    transform.scale.y = .3f;
+    transform.position.x = 100;
+    transform.position.y = 100;
+    world.addComponent(entity.id, transform);
+    int interval = 1000/24;
+    int frames = 9;
+    int xOffset = 575;
+    Animation animation = new Animation("run.png",interval, frames, xOffset);
+    world.addComponent(entity.id,animation);
+    try{
+      //String path = this.getClass().getClassLoader().getResource("shadow-dog.png").getPath();
+      //BufferedImage img = ImageIO.read(new File(path)) ;
+      Sprite sprite = new Sprite(null);
+      world.addComponent(entity.id, sprite);
+    }
+    catch (Exception e){
+      java.lang.System.out.println("Failed to load image");
+    }
+    start();
+  }
   public void  addNotify(){
     super.addNotify();
-    start();
+    //start();
   }
 
   public void start() {
@@ -31,13 +69,16 @@ public class Game extends JPanel implements Runnable
 
   @Override
   public void run() {
-    long beforeTime, timeDiff, sleepTime, afterTime;
+    long beforeTime, timeDiff=0, sleepTime, afterTime;
     long overSleepTime = 0l;
+    long dt =0;
     int noDelays = 0;
-    beforeTime = System.currentTimeMillis();
+    beforeTime = java.lang.System.currentTimeMillis();
     running = true;;
     while (running) {
-      afterTime = System.currentTimeMillis();
+      world.update(dt);
+      paintScreen();
+      afterTime = java.lang.System.currentTimeMillis();
       timeDiff = afterTime - beforeTime;
       sleepTime = period - timeDiff - overSleepTime;
       if (sleepTime > 0) {
@@ -45,7 +86,7 @@ public class Game extends JPanel implements Runnable
           Thread.sleep(sleepTime);
         } catch (InterruptedException ex) {
         }
-        overSleepTime = (System.currentTimeMillis() - afterTime) - sleepTime;
+        overSleepTime = (java.lang.System.currentTimeMillis() - afterTime) - sleepTime;
       }
       else {
         overSleepTime = 0;
@@ -54,7 +95,26 @@ public class Game extends JPanel implements Runnable
           noDelays = 0;
         }
       }
-      beforeTime = System.currentTimeMillis();
+      dt = java.lang.System.currentTimeMillis() - beforeTime;
+      beforeTime = java.lang.System.currentTimeMillis();
+    }
+  }
+   public void paintScreen() {
+    Graphics g;
+    RenderSystem system = world.getSystem(RenderSystem.class);
+    try{
+      g = this.getGraphics();
+      BufferedImage bufferedImage = system.getBufferImage();
+      if(g == null){
+      }
+      if((g != null) && (bufferedImage !=null)){
+        g.drawImage(bufferedImage, 0, 0, null);
+        Toolkit.getDefaultToolkit().sync();
+        g.dispose();
+      }
+    }
+    catch (Exception e) {
+      java.lang.System.out.println("Graphics context error: " + e);
     }
   }
 

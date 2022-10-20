@@ -1,15 +1,12 @@
 package bolt.components;
 import java.awt.image.BufferedImage;
+import bolt.Vec2d;
 
 public class Sprite implements Component{
   public BufferedImage sprite;
-  public Vec2d tile_offset = new Vec2d();
-  public int frame;
+  public boolean isVisible;
   public Sprite(BufferedImage sprite){
     this.sprite = sprite;
-  }
-  class Vec2d{
-    public float x=0;
-    public float y=0;
+    isVisible = true;
   }
 }

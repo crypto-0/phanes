@@ -14,7 +14,11 @@ public class EntityManager{
     return entity;
   }
 
-  public void destroyEntity(Entity entity){
-    entities.remove(entity.id);
+  public void destroyEntity(UUID id){
+    entities.remove(id);
+  }
+
+  public Map<UUID,Entity> getAllEntity(){
+    return entities;
   }
 }

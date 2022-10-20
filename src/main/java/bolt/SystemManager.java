@@ -6,14 +6,19 @@ import java.util.logging.Logger;
 
 public class SystemManager{
   private Map<Class<?>,System> systems = new HashMap<Class<?>,System>();
-  private Logger logger = Logger.getAnonymousLogger(SystemManager.class.getName());
+  private Logger logger = Logger.getLogger(SystemManager.class.getName());
+  private World world;
+  SystemManager(World world){
+    this.world = world;
+  }
   public <T extends System> void registerSystem(Class<T> systeClass){
     if(systems.containsKey(systeClass)){
       logger.warning("Registring system more than once.");
       return;
     }
     try{
-    systems.put(systeClass,systeClass.getDeclaredConstructor().newInstance());
+      T system = systeClass.getDeclaredConstructor(World.class).newInstance(this.world);
+      systems.put(systeClass,system);
     }
     catch(Exception e){
       logger.warning("Failed to register the system");
@@ -27,6 +32,12 @@ public class SystemManager{
       return null;
     }
     return className.cast(system);
+  }
+
+  public void update(long dt){
+    for(System system : systems.values()){
+      system.update(dt);
+    }
   }
   
 }
