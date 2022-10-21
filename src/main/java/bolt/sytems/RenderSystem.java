@@ -35,14 +35,7 @@ public class RenderSystem extends System{
       Transform transform = world.getComponent(entity.id,Transform.class);
       int dstx = (int)transform.position.x;
       int dsty = (int)transform.position.y;
-      //int srcx = spriteW * sprite.frame;
-      //srcx = 1 * spriteW;
-      int srcy = spriteH * 3;
-      //srcy =7 * spriteH;
-      float scalex = transform.scale.x;
-      float scaley = transform.scale.y;
-      //if(sprite != null && transform != null) g2d.drawImage(sprite.sprite,dstx,dsty,dstx +(int)(spriteW * scalex),dsty + (int)(spriteH * scaley),srcx,srcy, srcx + spriteW,srcy +spriteH,null);
-      if(sprite.sprite !=null) g2d.drawImage(sprite.sprite,dstx,dsty,null);
+      if(sprite.sprite !=null) g2d.drawImage(sprite.sprite,dstx,dsty,(int)(spriteW *0.5),(int)(spriteH* 0.5),null);
     }
 	}
 }

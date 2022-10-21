@@ -29,9 +29,15 @@ public class Game extends JPanel implements Runnable
   public void init(){
     world.registerSystem(RenderSystem.class);
     world.registerSystem(AnimationSystem.class);
+    world.registerSystem(PhysicSystem.class);
+    world.registerSystem(InputSystem.class);
+    world.registerSystem(PlayerMovementSystem.class);
+    world.registerComponent(PlayerMovement.class);
     world.registerComponent(Sprite.class);
     world.registerComponent(Transform.class);
     world.registerComponent(Animation.class);
+    world.registerComponent(RigidBody.class);
+    world.registerComponent(Input.class);
     Entity entity = world.createEntity();
     Transform transform = new Transform();
     transform.scale.x = .3f;
@@ -39,6 +45,11 @@ public class Game extends JPanel implements Runnable
     transform.position.x = 100;
     transform.position.y = 100;
     world.addComponent(entity.id, transform);
+    world.addComponent(entity.id, new RigidBody());
+    world.addComponent(entity.id, new Input());
+    world.addComponent(entity.id, new PlayerMovement(5,5));
+    InputSystem  inputSystem = world.getSystem(InputSystem.class);
+    this.addKeyListener(inputSystem);
     int interval = 1000/24;
     int frames = 9;
     int xOffset = 575;
