@@ -1,11 +1,12 @@
 package bolt;
 import bolt.sytems.System;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
 public class SystemManager{
-  private Map<Class<?>,System> systems = new HashMap<Class<?>,System>();
+  private Map<Class<?>,System> systems = new LinkedHashMap<>();
   private Logger logger = Logger.getLogger(SystemManager.class.getName());
   private World world;
   SystemManager(World world){

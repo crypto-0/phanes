@@ -14,7 +14,7 @@ public class EntityManager{
     return entity;
   }
 
-  public void destroyEntity(UUID id){
+  public void removeEntity(UUID id){
     entities.remove(id);
   }
 

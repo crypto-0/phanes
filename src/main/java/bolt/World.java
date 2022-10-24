@@ -8,10 +8,12 @@ public class World{
   private final ComponentManager componentManager;
   private final EntityManager entityManager;
   private final SystemManager systemManager;
+  private final EntityStateMachineManager entityStateMachineManager;
   public World(){
     componentManager = new ComponentManager();
     entityManager = new EntityManager();
     systemManager = new SystemManager(this);
+    entityStateMachineManager = new EntityStateMachineManager(this);
   }
 
   public Entity createEntity(){
@@ -19,10 +21,28 @@ public class World{
   }
 
 
-  public void DestroyEntity(UUID entityId){
-    entityManager.destroyEntity(entityId);
+  public void removeEntity(UUID entityId){
+    entityManager.removeEntity(entityId);
+    componentManager.entityRemoved(entityId);
   }
 
+  public EntityStateMachine createStateMachine(UUID entityId){
+    return entityStateMachineManager.createStateMachine(entityId);
+  }
+  public void removeStateMachine(UUID entityId){
+    entityStateMachineManager.removeStateMachine(entityId);
+  }
+  public EntityStateMachine getStateMachine(UUID entityId){
+    return entityStateMachineManager.getStateMachine(entityId);
+  }
+  public void changeEntityState(UUID entityId,String stateName){
+    EntityStateMachine entityStateMachine = entityStateMachineManager.getStateMachine(entityId);
+    if(entityStateMachine !=null){
+      entityStateMachine.changeEntityState(stateName);
+    }
+  }
+
+  
   public Map<UUID,Entity> getAllEntity(){
     return entityManager.getAllEntity();
   }

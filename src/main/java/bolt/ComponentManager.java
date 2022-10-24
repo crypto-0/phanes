@@ -55,7 +55,7 @@ public class ComponentManager{
     return componentClass.cast(component);
   }
 
-  public void entityDestroyed(UUID entityId){
+  public void entityRemoved(UUID entityId){
     for(Integer componentType: componentTypes.values()){
       components.get(componentType).remove(entityId);
     }

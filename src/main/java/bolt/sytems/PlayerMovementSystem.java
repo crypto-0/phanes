@@ -20,9 +20,9 @@ public class PlayerMovementSystem extends System{
       PlayerMovement playerMovement = world.getComponent(entity.id,PlayerMovement.class);
       RigidBody rigidBody = world.getComponent(entity.id,RigidBody.class);
       if(input != null && playerMovement != null){
-        if(input.A == 1) rigidBody.velocity.x = playerMovement.velocity;
-        else if(input.D == 1) rigidBody.velocity.x = -playerMovement.velocity;
-        else if(input.SPACE == 1) rigidBody.velocity.y = -playerMovement.velocity;
+        if(input.A == 1) rigidBody.velocity.x = -playerMovement.velocity * ((float)dt/1000);
+        else if(input.D == 1) rigidBody.velocity.x = playerMovement.velocity * ((float)dt/1000);
+        else if(input.SPACE == 1) rigidBody.velocity.y = -playerMovement.velocity * ((float)dt/1000);
         else{ 
           rigidBody.velocity.x =0;
           rigidBody.velocity.y =0;

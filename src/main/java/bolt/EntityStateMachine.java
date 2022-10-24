@@ -15,13 +15,18 @@ public class EntityStateMachine{
     this.entityId = entityId;
   }
 
-  public void addState(String name,EntityState state){
+  public EntityState createEntityState(String name){
+    EntityState entityState = new EntityState();
+    states.put(name, entityState);
+    return entityState;
+  }
+  public void addEntityState(String name,EntityState state){
     states.put(name, state);
   }
-  public void removeState(String name){
+  public void removeEntityState(String name){
     states.remove(name);
   }
-  public void changeState(String name){
+  public void changeEntityState(String name){
     EntityState newState = states.get(name);
     if(newState != null){
       if(newState == currentState)return;

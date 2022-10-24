@@ -14,7 +14,7 @@ public class Animation implements Component{
   public boolean finished ;
   public boolean loop;
   public BufferedImage sprites[];
-  public Animation(String spriteSheetName,int interval,int frames,int xOffset){
+  public Animation(String spriteSheetName,long interval,int frames,int xOffset){
     try{
       String path = this.getClass().getClassLoader().getResource(spriteSheetName).getPath();
       BufferedImage spriteSheet = ImageIO.read(new File(path)) ;

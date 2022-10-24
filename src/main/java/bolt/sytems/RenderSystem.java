@@ -32,6 +32,7 @@ public class RenderSystem extends System{
     g2d.fillRect(0, 0, 800, 800);
     for(Entity entity: entities.values()){
       Sprite sprite = world.getComponent(entity.id,Sprite.class);
+      if(sprite == null)continue;
       Transform transform = world.getComponent(entity.id,Transform.class);
       int dstx = (int)transform.position.x;
       int dsty = (int)transform.position.y;
