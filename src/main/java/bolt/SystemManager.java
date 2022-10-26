@@ -1,6 +1,5 @@
 package bolt;
 import bolt.sytems.System;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -12,18 +11,13 @@ public class SystemManager{
   SystemManager(World world){
     this.world = world;
   }
-  public <T extends System> void registerSystem(Class<T> systeClass){
-    if(systems.containsKey(systeClass)){
+  public void addSystem(System system){
+    if(systems.containsKey(system.getClass())){
       logger.warning("Registring system more than once.");
       return;
     }
-    try{
-      T system = systeClass.getDeclaredConstructor(World.class).newInstance(this.world);
-      systems.put(systeClass,system);
-    }
-    catch(Exception e){
-      logger.warning("Failed to register the system");
-    }
+      //T system = systeClass.getDeclaredConstructor(World.class).newInstance(this.world);
+    systems.put(system.getClass(),system);
   }
 
   public <T extends System> T getSystem(Class<T> className){
@@ -39,6 +33,10 @@ public class SystemManager{
     for(System system : systems.values()){
       system.update(dt);
     }
+  }
+
+  public void clearSystems(){
+    systems.clear();
   }
   
 }

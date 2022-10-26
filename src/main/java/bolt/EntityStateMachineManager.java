@@ -29,4 +29,8 @@ public class EntityStateMachineManager{
   public void entityRemoved(UUID entityId){
     entityStateMachines.remove(entityId);
   }
+
+  public void clearStateMachines(){
+    entityStateMachines.clear();
+  }
 }

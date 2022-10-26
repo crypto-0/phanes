@@ -1,19 +1,21 @@
 package bolt;
 import java.util.Map;
 import java.util.UUID;
-
 import bolt.components.Component;
+import bolt.scenes.*;
 
 public class World{
   private final ComponentManager componentManager;
   private final EntityManager entityManager;
   private final SystemManager systemManager;
   private final EntityStateMachineManager entityStateMachineManager;
+  private final SceneManager sceneManager;
   public World(){
     componentManager = new ComponentManager();
     entityManager = new EntityManager();
     systemManager = new SystemManager(this);
     entityStateMachineManager = new EntityStateMachineManager(this);
+    sceneManager = new SceneManager(this);
   }
 
   public Entity createEntity(){
@@ -42,7 +44,6 @@ public class World{
     }
   }
 
-  
   public Map<UUID,Entity> getAllEntity(){
     return entityManager.getAllEntity();
   }
@@ -62,16 +63,31 @@ public class World{
     return componentManager.getComponent(entityId,componentClass);
   }
 
-  public <T extends bolt.sytems.System> void registerSystem(Class<T> systemClass){
-    systemManager.registerSystem(systemClass);
+  public void addSystem(bolt.sytems.System sytem){
+    systemManager.addSystem(sytem);
   }
 
   public <T extends bolt.sytems.System> T getSystem(Class<T> systemClass){
     return systemManager.getSystem(systemClass);
   }
 
+  public  void addScene(String sceneName,Scene scene){
+    sceneManager.addScene(sceneName,scene);
+  }
+  public void loadScene(String sceneName){
+    sceneManager.loadScene(sceneName);
+  }
+
+
   public void update(long dt){
     systemManager.update(dt);
+  }
+
+  public void clear(){
+    systemManager.clearSystems();
+    entityManager.clearEntities();
+    componentManager.clearComponents();
+    entityStateMachineManager.clearStateMachines();
   }
 
 }

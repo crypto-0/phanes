@@ -1,7 +1,7 @@
 package bolt.sytems;
 import bolt.Entity;
 import bolt.World;
-import bolt.components.Sprite;
+import bolt.components.SpriteRenderer;
 import bolt.components.Transform;
 
 import java.awt.image.BufferedImage;
@@ -31,12 +31,12 @@ public class RenderSystem extends System{
     g2d.setColor(Color.white);
     g2d.fillRect(0, 0, 800, 800);
     for(Entity entity: entities.values()){
-      Sprite sprite = world.getComponent(entity.id,Sprite.class);
-      if(sprite == null)continue;
+      SpriteRenderer spriteRenderer = world.getComponent(entity.id,SpriteRenderer.class);
+      if(spriteRenderer == null)continue;
       Transform transform = world.getComponent(entity.id,Transform.class);
       int dstx = (int)transform.position.x;
       int dsty = (int)transform.position.y;
-      if(sprite.sprite !=null) g2d.drawImage(sprite.sprite,dstx,dsty,(int)(spriteW *0.5),(int)(spriteH* 0.5),null);
+      if(spriteRenderer.sprite !=null) g2d.drawImage(spriteRenderer.sprite.img,dstx,dsty,(int)(spriteW *0.5),(int)(spriteH* 0.5),null);
     }
 	}
 }

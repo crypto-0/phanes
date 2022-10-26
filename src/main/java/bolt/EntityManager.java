@@ -21,4 +21,8 @@ public class EntityManager{
   public Map<UUID,Entity> getAllEntity(){
     return entities;
   }
+
+  public void clearEntities(){
+    entities.clear();
+  }
 }

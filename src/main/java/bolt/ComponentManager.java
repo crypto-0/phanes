@@ -10,11 +10,12 @@ import bolt.components.Component;
 public class ComponentManager{
   private Map<Class<?>,Integer> componentTypes ;
   private Map<Integer,Map<UUID,Component>> components;
+  private Logger logger; 
   public ComponentManager(){
   componentTypes = new HashMap<Class<?>,Integer>();
   components = new HashMap<Integer,Map<UUID,Component>>();
+  logger = Logger.getLogger(ComponentManager.class.getName());
   }
-  private Logger logger = Logger.getLogger(ComponentManager.class.getName());
   public <T extends Component> void registerComponent(Class<T> componentClass){
     if(componentTypes.get(componentClass)!= null){
       logger.warning("Registering component type more than once.");
@@ -59,6 +60,11 @@ public class ComponentManager{
     for(Integer componentType: componentTypes.values()){
       components.get(componentType).remove(entityId);
     }
+  }
+
+  public void clearComponents(){
+    componentTypes.clear();
+    components.clear();
   }
 
 }
