@@ -2,9 +2,6 @@ package bolt;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
-import bolt.components.*;
 import bolt.sytems.*;
 import bolt.sytems.System;
 import bolt.EntityState;
@@ -12,26 +9,25 @@ import bolt.scenes.*;
 public class Game extends JPanel implements Runnable
 {
   private World world;
-  private final int PWIDTH;
-  private final int PHEIGHT;
   private Thread animator;
   private volatile boolean running = false;
-  private long period = 1000 / 60;
+  private int TARGET_FPS = 60;
   private int NO_DELAY_PER_YIELD = 10;
+  private long period = 1000 / TARGET_FPS;
 
   public Game(int  PWIDTH,int PHEIGHT) {
-    this.PWIDTH = PWIDTH;
-    this.PHEIGHT = PHEIGHT;
     setBackground(Color.white);
     setFocusable(true);
     setPreferredSize(new Dimension(PWIDTH, PHEIGHT));
     world = new World();
+    Display.buffer = new BufferedImage(PWIDTH,PHEIGHT,BufferedImage.TYPE_INT_RGB);
   }
 
   public void init(){
     Scene scene= new Scene1(world);
     world.addScene("test",scene);
     world.loadScene("test");
+    this.addKeyListener(world.getSystem(InputSystem.class));
     start();
   }
   public void  addNotify(){
@@ -55,7 +51,7 @@ public class Game extends JPanel implements Runnable
     beforeTime = java.lang.System.currentTimeMillis();
     running = true;;
     while (running) {
-      world.update(dt);
+      world.update(dt * .001f * TARGET_FPS);
       paintScreen();
       afterTime = java.lang.System.currentTimeMillis();
       timeDiff = afterTime - beforeTime;
@@ -80,11 +76,9 @@ public class Game extends JPanel implements Runnable
   }
    public void paintScreen() {
     Graphics g;
-    RenderSystem system = world.getSystem(RenderSystem.class);
     try{
       g = this.getGraphics();
-      BufferedImage bufferedImage = system.getBufferImage();
-      //BufferedImage bufferedImage =null;
+      BufferedImage bufferedImage = Display.buffer;
       if(g == null){
       }
       if((g != null) && (bufferedImage !=null)){

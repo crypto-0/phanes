@@ -13,7 +13,7 @@ public class SystemManager{
   }
   public void addSystem(System system){
     if(systems.containsKey(system.getClass())){
-      logger.warning("Registring system more than once.");
+      logger.warning("Registring " + system.getClass().getName() +  "more than once.");
       return;
     }
       //T system = systeClass.getDeclaredConstructor(World.class).newInstance(this.world);
@@ -23,13 +23,13 @@ public class SystemManager{
   public <T extends System> T getSystem(Class<T> className){
     System system = systems.get(className);
     if(system == null){
-      logger.warning("Attempting to get unregister system");
+      logger.warning("Attempting to get unregister system " + className.getName());
       return null;
     }
     return className.cast(system);
   }
 
-  public void update(long dt){
+  public void update(float dt){
     for(System system : systems.values()){
       system.update(dt);
     }

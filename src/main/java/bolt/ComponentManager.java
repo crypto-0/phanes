@@ -18,7 +18,7 @@ public class ComponentManager{
   }
   public <T extends Component> void registerComponent(Class<T> componentClass){
     if(componentTypes.get(componentClass)!= null){
-      logger.warning("Registering component type more than once.");
+      logger.warning("Registering component type" + componentClass.getName() + " more than once.");
       return;
     }
     componentTypes.put(componentClass, componentTypes.size() + 1);
@@ -29,7 +29,7 @@ public class ComponentManager{
     Integer componentType;
     componentType = componentTypes.get(component.getClass());
     if(componentType == null){
-      logger.warning("Attempting to add unregister component");
+      logger.warning("Attempting to add unregister component " + component.getClass().getName());
       return;
     }
     components.get(componentType).put(entityId, component);
@@ -39,7 +39,7 @@ public class ComponentManager{
     Integer componentType;
     componentType = componentTypes.get(componentClass);
     if(componentType == null){
-      logger.warning("Attempting to remove unregister component");
+      logger.warning("Attempting to remove unregister component " + componentClass.getName());
       return;
     }
     components.get(componentType).remove(entityId);
@@ -49,7 +49,7 @@ public class ComponentManager{
     Integer componentType;
     componentType = componentTypes.get(componentClass);
     if(componentType == null){
-      logger.warning("Attempting to get unregister component");
+      logger.warning("Attempting to get unregister component " + componentClass.getName());
       return null;
     }
     Component component = components.get(componentType).get(entityId);

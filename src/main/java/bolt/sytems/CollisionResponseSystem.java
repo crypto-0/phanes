@@ -13,7 +13,7 @@ public class CollisionResponseSystem extends System{
   }
 
 	@Override
-	public void update(long dt) {
+	public void update(float dt) {
     Map<UUID,Entity> entities = world.getAllEntity();
     Comparator<Collision> comparator = (Collision collision,Collision collision2) -> {
       return collision.collisionTime < collision2.collisionTime ? 1:-1;
@@ -33,13 +33,11 @@ public class CollisionResponseSystem extends System{
       //rigidBody.velocity.y = (float)(rigidBody.velocity.y * collision.collisionTime);
       double remainingTime = 1 - collision.collisionTime;
       double speed = (rigidBody.velocity.x * collision.ynormal + rigidBody.velocity.y * collision.xnormal) * remainingTime;
+      //java.lang.System.out.println("Speed: " + speed);
       rigidBody.velocity.x = (float)speed * collision.ynormal;
       rigidBody.velocity.y = (float)speed * collision.xnormal;
-      //transform.position.x +=rigidBody.velocity.x ;
-      //transform.position.y +=rigidBody.velocity.y ;
-      //rigidBody.velocity.x = 0;
-      //rigidBody.velocity.y = 0;
-      world.removeComponent(collision.entityId,Collision.class);
+      //java.lang.System.out.println("got collisions: " + rigidBody.velocity.y);
+      //world.removeComponent(collision.entityId,Collision.class);
     }
 	}
 }

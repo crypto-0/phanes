@@ -12,7 +12,7 @@ public class AnimationSystem extends System{
     super(world);
   }
 	@Override
-	public void update(long dt) {
+	public void update(float dt) {
     Map<UUID,Entity> entities = world.getAllEntity();
     for(Entity entity: entities.values()){
       Animation animation = world.getComponent(entity.id,Animation.class);
@@ -32,7 +32,7 @@ public class AnimationSystem extends System{
           //sprite.sprite = animation.sprites[2];
           if(animation.timeElapse >= animation.interval){
             animation.currentFrame++;
-            animation.timeElapse =0l;
+            animation.timeElapse =0;
           }
           animation.timeElapse += dt;
         }

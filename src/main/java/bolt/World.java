@@ -79,7 +79,7 @@ public class World{
   }
 
 
-  public void update(long dt){
+  public void update(float dt){
     systemManager.update(dt);
   }
 

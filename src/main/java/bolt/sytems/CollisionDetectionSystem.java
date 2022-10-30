@@ -12,20 +12,20 @@ public class CollisionDetectionSystem extends System{
   }
 
 	@Override
-	public void update(long dt) {
+	public void update(float dt) {
     Map<UUID,Entity> entities = world.getAllEntity();
     for(UUID entityId: entities.keySet()){
       for(UUID entityId2: entities.keySet()){
         if(entityId == entityId2)continue;
+        world.removeComponent(entityId,Collision.class);
         RigidBody rigidBody = world.getComponent(entityId,RigidBody.class);
-        RigidBody rigidBody2 = world.getComponent(entityId2,RigidBody.class);
         Transform transform = world.getComponent(entityId,Transform.class);
         Collider collider = world.getComponent(entityId, Collider.class);
         Transform transform2 = world.getComponent(entityId2,Transform.class);
         Collider collider2 = world.getComponent(entityId2, Collider.class);
         double dxEntry,dxExit,dyEntry,dyExit;
         double txEntry,txExit,tyEntry,tyExit;
-        if(rigidBody != null && rigidBody2 != null){
+        if(rigidBody != null){
           if(rigidBody.velocity.x > 0){
             dxEntry = transform2.position.x -(transform.position.x + collider.width);
             dxExit = (transform2.position.x + collider2.width) -(transform.position.x);
@@ -61,19 +61,32 @@ public class CollisionDetectionSystem extends System{
             tyEntry = dyEntry/rigidBody.velocity.y;
             tyExit = dyExit/rigidBody.velocity.y;
           }
+          tyEntry = tyEntry > 1.0f ? Double.NEGATIVE_INFINITY :tyEntry;
+          txEntry = txEntry > 1.0f ? Double.NEGATIVE_INFINITY :txEntry;
 
           double entryTime = txEntry > tyEntry ? txEntry : tyEntry;
           double exitTime  = txExit > tyExit ? tyExit : txExit;
-          if(entryTime > exitTime)continue;
-          if(txEntry < 0 && tyEntry < 0)continue;
-          if(txEntry > 1 || tyEntry > 1)continue;
+          if(entryTime > exitTime){
+            continue;
+          }
+          if(txEntry < -.01 && tyEntry < -0.01){
+            continue;
+          }
           if(tyEntry < 0){
-            if(transform.position.y + collider.height < transform2.position.y)continue;
-            if(transform.position.y > transform2.position.y + collider2.height)continue;
+            if(transform.position.y + collider.height < transform2.position.y){
+              continue;
+            }
+            if(transform.position.y > transform2.position.y + collider2.height){
+              continue;
+            }
           }
           if(txEntry < 0){
-            if(transform.position.x + collider.width < transform2.position.x)continue;
-            if(transform.position.x > transform2.position.x + collider2.width)continue;
+            if(transform.position.x + collider.width < transform2.position.x){
+              continue;
+            }
+            if(transform.position.x > transform2.position.x + collider2.width){
+              continue;
+            }
           }
           byte xnormal,ynormal;
           if(txEntry > tyEntry){

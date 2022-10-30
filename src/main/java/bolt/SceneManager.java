@@ -31,9 +31,5 @@ public class SceneManager{
       currentScene = scene;
       currentScene.onActivate();
     }
-    else{
-      System.out.println("null scene");
-    }
-
   }
 }

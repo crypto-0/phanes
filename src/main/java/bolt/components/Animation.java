@@ -2,8 +2,8 @@ package bolt.components;
 import bolt.SpriteSheet;
 
 public class Animation implements Component{
-  public long timeElapse;
-  public long interval ;
+  public float timeElapse;
+  public float interval ;
   public int currentFrame;
   public int frames;
   public boolean finished ;
@@ -16,5 +16,6 @@ public class Animation implements Component{
     this.currentFrame = 0;
     this.interval = interval;
     this.frames = spriteSheet.sprites.size();
+    this.loop = true;
   }
 }

@@ -6,5 +6,5 @@ public abstract class  System{
   public System(World world){
     this.world = world;
   }
-  public abstract void update(long dt);
+  public abstract void update(float dt);
 }

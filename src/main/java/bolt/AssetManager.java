@@ -14,9 +14,8 @@ public class AssetManager{
 
   }
   public void addSprite(String resourceName,Sprite sprite){
-    String path = this.getClass().getClassLoader().getResource(resourceName).getPath();
-    if(!sprites.containsKey(path)){
-      if(sprite !=null)sprites.put(path, sprite);
+    if(!sprites.containsKey(resourceName)){
+      if(sprite !=null)sprites.put(resourceName, sprite);
     }
   }
   public void addSpriteSheet(String resourceName,SpriteSheet spriteSheet){
@@ -27,10 +26,9 @@ public class AssetManager{
   }
 
   public Sprite getSprite(String resourceName){
-    String path = this.getClass().getClassLoader().getResource(resourceName).getPath();
-    Sprite sprite = sprites.get(path);
+    Sprite sprite = sprites.get(resourceName);
     if(sprite == null){
-      this.logger.warning("Tried to access sprite " + path + " and its not managed");
+      this.logger.warning("Tried to access sprite " + resourceName + " and its not managed");
     }
     return sprite;
   }
