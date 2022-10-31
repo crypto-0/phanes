@@ -5,7 +5,7 @@ public class Bolt{
 
   public static void main(String args[]){
     JFrame window = new JFrame();
-    Game game = new Game(800, 800);
+    Game game = new Game(800, 700);
     game.init();
     window.add(game);
     window.pack();

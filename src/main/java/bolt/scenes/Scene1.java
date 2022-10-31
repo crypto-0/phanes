@@ -36,6 +36,8 @@ public class Scene1 extends Scene{
     world.addSystem(new CollisionResponseSystem(world));
     world.addSystem(new GroundedSystem(world));
     world.addSystem(new PhysicSystem(world));
+    world.addSystem(new CameraFollowSystem(world));
+    world.addSystem(new ParallaxSystem(world));
     world.addSystem(new AnimationSystem(world));
     world.addSystem(new RenderSystem(world));
     //register components
@@ -52,20 +54,22 @@ public class Scene1 extends Scene{
     world.registerComponent(Collision.class);
     world.registerComponent(Grounded.class);
     world.registerComponent(Ground.class);
+    world.registerComponent(CameraFocus.class);
+    world.registerComponent(Parallax.class);
     //player
     Entity player = world.createEntity();
-    SpriteRenderer spriteRenderer = new SpriteRenderer(assetManager.getSpriteSheet("idle").sprites.get(0), 0);
+    SpriteRenderer spriteRenderer = new SpriteRenderer(assetManager.getSpriteSheet("idle").sprites.get(0), 6);
     Collider collider = new Collider((int)(spriteRenderer.sprite.width *.35f),(int)(spriteRenderer.sprite.height * .35f));
     world.addComponent(player.id,spriteRenderer);
     world.addComponent(player.id, collider);
     world.addComponent(player.id, new Input());
     world.addComponent(player.id, new Grounded());
-    world.addComponent(player.id,new PlayerMovement(20, 100));
+    world.addComponent(player.id, new CameraFocus(Display.buffer.getWidth() / 2));
     RigidBody rigidBody = new RigidBody();
     rigidBody.gravity = 3.8f;
     world.addComponent(player.id,rigidBody);
     Transform transform = new Transform();
-    transform.position = new Vec2d(400,400);
+    transform.position = new Vec2d(0,0);
     transform.scale = new Vec2d(.35f, .35f);
     world.addComponent(player.id, transform);
     //create player states
@@ -84,17 +88,37 @@ public class Scene1 extends Scene{
     entityStateMachine.addEntityState("attack", attackEntityState);
     world.changeEntityState(player.id,"idle");
     //create ground entity
+    for(int a=-2; a< 3; a++){
     Entity ground = world.createEntity();
-    spriteRenderer = new SpriteRenderer(assetManager.getSprite("layer-5"),0);
+    spriteRenderer = new SpriteRenderer(assetManager.getSprite("layer-5"),5);
     Transform transform2 = new Transform();
-    transform2.scale = new Vec2d(.35f, .35f);
-    transform2.position.x = 0;
+    //transform2.scale = new Vec2d(.35f, 1f);
+    transform2.scale = new Vec2d(1f, 1f);
+    transform2.position.x = a * (int)(spriteRenderer.sprite.width * transform2.scale.x);
     transform2.position.y = Display.buffer.getHeight() - (spriteRenderer.sprite.height * transform2.scale.y);
     Collider collider2 = new Collider((int)(spriteRenderer.sprite.width *transform2.scale.x),(int)(spriteRenderer.sprite.height * transform2.scale.y));
     world.addComponent(ground.id, transform2);
     world.addComponent(ground.id,spriteRenderer);
     world.addComponent(ground.id,collider2);
     world.addComponent(ground.id,new Ground());
+    world.addComponent(ground.id, new Parallax(0.5f));
+    }
+    //create rest of background
+    for(int b=1; b <5; b++){
+      for(int a=-2; a< 3; a++){
+      Entity ground = world.createEntity();
+      spriteRenderer = new SpriteRenderer(assetManager.getSprite("layer-" + b),b);
+      Transform transform2 = new Transform();
+      //transform2.scale = new Vec2d(.35f, 1f);
+      transform2.scale = new Vec2d(1f, 1f);
+      transform2.position.x = a * (int)(spriteRenderer.sprite.width * transform2.scale.x);
+      transform2.position.y = Display.buffer.getHeight() - (spriteRenderer.sprite.height * transform2.scale.y);
+      world.addComponent(ground.id, transform2);
+      world.addComponent(ground.id,spriteRenderer);
+      world.addComponent(ground.id,new Ground());
+      world.addComponent(ground.id, new Parallax(0.5f));
+      }
+    }
 	}
 
 	@Override
@@ -117,6 +141,10 @@ public class Scene1 extends Scene{
     }
     ArrayList<String> spriteResources = new ArrayList<>();
     spriteResources.add(0,"layer-5");
+    spriteResources.add(1,"layer-4");
+    spriteResources.add(2,"layer-3");
+    spriteResources.add(3,"layer-2");
+    spriteResources.add(4,"layer-1");
     for(String resource: spriteResources){
       String resourceFullName = "background/city/" + resource+ ".png";
       BufferedImage groundBackground = getImage(resourceFullName);

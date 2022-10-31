@@ -22,7 +22,7 @@ public class AttackStateSystem extends System{
           if(input.vertical > 0){
             if(grounded !=null){
               RigidBody rigidBody = world.getComponent(entity.id, RigidBody.class);
-              if(grounded.grounded) rigidBody.velocity.y = -60;
+              if(grounded.grounded) rigidBody.velocity.y = -50;
             }
           }
           else if(input.vertical < 0){

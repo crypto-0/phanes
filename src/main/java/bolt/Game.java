@@ -3,8 +3,6 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import bolt.sytems.*;
-import bolt.sytems.System;
-import bolt.EntityState;
 import bolt.scenes.*;
 public class Game extends JPanel implements Runnable
 {
@@ -25,14 +23,10 @@ public class Game extends JPanel implements Runnable
 
   public void init(){
     Scene scene= new Scene1(world);
-    world.addScene("test",scene);
-    world.loadScene("test");
+    world.addScene("mainScene",scene);
+    world.loadScene("mainScene");
     this.addKeyListener(world.getSystem(InputSystem.class));
     start();
-  }
-  public void  addNotify(){
-    super.addNotify();
-    //start();
   }
 
   public void start() {

@@ -13,11 +13,14 @@ public class CollisionDetectionSystem extends System{
 
 	@Override
 	public void update(float dt) {
+    sweptAabb(dt);
+	}
+  private void sweptAabb(float dt){
     Map<UUID,Entity> entities = world.getAllEntity();
     for(UUID entityId: entities.keySet()){
+      world.removeComponent(entityId,Collision.class);
       for(UUID entityId2: entities.keySet()){
         if(entityId == entityId2)continue;
-        world.removeComponent(entityId,Collision.class);
         RigidBody rigidBody = world.getComponent(entityId,RigidBody.class);
         Transform transform = world.getComponent(entityId,Transform.class);
         Collider collider = world.getComponent(entityId, Collider.class);
@@ -25,7 +28,7 @@ public class CollisionDetectionSystem extends System{
         Collider collider2 = world.getComponent(entityId2, Collider.class);
         double dxEntry,dxExit,dyEntry,dyExit;
         double txEntry,txExit,tyEntry,tyExit;
-        if(rigidBody != null){
+        if(rigidBody != null && collider !=null && collider2 !=null){
           if(rigidBody.velocity.x > 0){
             dxEntry = transform2.position.x -(transform.position.x + collider.width);
             dxExit = (transform2.position.x + collider2.width) -(transform.position.x);
@@ -61,18 +64,25 @@ public class CollisionDetectionSystem extends System{
             tyEntry = dyEntry/rigidBody.velocity.y;
             tyExit = dyExit/rigidBody.velocity.y;
           }
-          tyEntry = tyEntry > 1.0f ? Double.NEGATIVE_INFINITY :tyEntry;
-          txEntry = txEntry > 1.0f ? Double.NEGATIVE_INFINITY :txEntry;
-
+          tyEntry = tyEntry > 1.0f ?Double.NEGATIVE_INFINITY:tyEntry;
+          txEntry = txEntry > 1.0f ?Double.NEGATIVE_INFINITY:txEntry;
           double entryTime = txEntry > tyEntry ? txEntry : tyEntry;
+          entryTime +=0f;
           double exitTime  = txExit > tyExit ? tyExit : txExit;
           if(entryTime > exitTime){
             continue;
           }
-          if(txEntry < -.01 && tyEntry < -0.01){
+          if(txEntry < -.001 && tyEntry < -.001){
             continue;
           }
-          if(tyEntry < 0){
+          //if(txEntry < 0f && tyEntry < 0f){
+            //continue;
+          //}
+          if(txEntry >= dt || tyEntry >= dt){
+            continue;
+          }
+          
+          if(tyEntry < -.01f){
             if(transform.position.y + collider.height < transform2.position.y){
               continue;
             }
@@ -80,7 +90,7 @@ public class CollisionDetectionSystem extends System{
               continue;
             }
           }
-          if(txEntry < 0){
+          if(txEntry < -.01f){
             if(transform.position.x + collider.width < transform2.position.x){
               continue;
             }
@@ -109,10 +119,14 @@ public class CollisionDetectionSystem extends System{
               ynormal = -1;
             }
           }
-          Collision collision = new Collision(entityId, entityId2, entryTime, xnormal, ynormal);
+          Collision collision = world.getComponent(entityId,Collision.class);
+          if(collision !=null){
+            if(collision.collisionTime < entryTime)continue;
+          }
+          collision = new Collision(entityId, entityId2, entryTime, xnormal, ynormal);
           world.addComponent(entityId, collision);
         }
       }
     }
-	}
+  }
 }

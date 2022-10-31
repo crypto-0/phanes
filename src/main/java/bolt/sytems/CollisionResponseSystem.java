@@ -29,15 +29,10 @@ public class CollisionResponseSystem extends System{
       Transform transform = world.getComponent(collision.entityId,Transform.class);
       transform.position.x += rigidBody.velocity.x * collision.collisionTime;
       transform.position.y += rigidBody.velocity.y * collision.collisionTime;
-      //rigidBody.velocity.x = (float)(rigidBody.velocity.x * collision.collisionTime);
-      //rigidBody.velocity.y = (float)(rigidBody.velocity.y * collision.collisionTime);
       double remainingTime = 1 - collision.collisionTime;
       double speed = (rigidBody.velocity.x * collision.ynormal + rigidBody.velocity.y * collision.xnormal) * remainingTime;
-      //java.lang.System.out.println("Speed: " + speed);
       rigidBody.velocity.x = (float)speed * collision.ynormal;
       rigidBody.velocity.y = (float)speed * collision.xnormal;
-      //java.lang.System.out.println("got collisions: " + rigidBody.velocity.y);
-      //world.removeComponent(collision.entityId,Collision.class);
     }
 	}
 }

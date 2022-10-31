@@ -9,10 +9,8 @@ import bolt.World;
 import bolt.components.Input;
 
 public class InputSystem extends System implements KeyListener{
-  //public byte W ,A, S, D,SPACE;
   public byte horizontal;
   public byte vertical;
-  public byte space;
   public InputSystem(World world){
     super(world);
   }
@@ -31,23 +29,15 @@ public class InputSystem extends System implements KeyListener{
   public void keyPressed(KeyEvent key) {
     switch(key.getKeyCode()){
       case 32:
-        //this.SPACE = 1;
         this.vertical =1;
         break;
-      case 87:
-        //this.W = 1;
-        //this.horizontal =1;
-        break;
       case 65:
-        //this.A = 1;
         horizontal = -1;
         break;
       case 83:
-        //this.S = 1;
         this.vertical = -1;
         break;
       case 68:
-        //this.D = 1;
         this.horizontal = 1;
         break;
     }

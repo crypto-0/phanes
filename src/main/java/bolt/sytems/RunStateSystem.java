@@ -30,7 +30,7 @@ public class RunStateSystem extends System{
               rigidBody.velocity.x = 0;
               transform.scale.x *=-1;
             }
-            rigidBody.velocity.x = 10  * input.horizontal;
+            rigidBody.velocity.x = 40  * input.horizontal;
           }
           if(input.vertical > 0){
             world.changeEntityState(entity.id,"attack");

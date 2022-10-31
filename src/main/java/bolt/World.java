@@ -10,12 +10,14 @@ public class World{
   private final SystemManager systemManager;
   private final EntityStateMachineManager entityStateMachineManager;
   private final SceneManager sceneManager;
+  public final Camera camera;
   public World(){
     componentManager = new ComponentManager();
     entityManager = new EntityManager();
     systemManager = new SystemManager(this);
     entityStateMachineManager = new EntityStateMachineManager(this);
     sceneManager = new SceneManager(this);
+    camera = new Camera();
   }
 
   public Entity createEntity(){
