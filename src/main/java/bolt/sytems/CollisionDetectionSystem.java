@@ -72,17 +72,17 @@ public class CollisionDetectionSystem extends System{
           if(entryTime > exitTime){
             continue;
           }
-          if(txEntry < -.001 && tyEntry < -.001){
+          //if(txEntry < -.001 && tyEntry < -.001){
+           // continue;
+          //}
+          if(txEntry < 0f && tyEntry < 0f){
             continue;
           }
-          //if(txEntry < 0f && tyEntry < 0f){
-            //continue;
-          //}
           if(txEntry >= dt || tyEntry >= dt){
             continue;
           }
           
-          if(tyEntry < -.01f){
+          if(tyEntry < 0f){
             if(transform.position.y + collider.height < transform2.position.y){
               continue;
             }
@@ -90,7 +90,7 @@ public class CollisionDetectionSystem extends System{
               continue;
             }
           }
-          if(txEntry < -.01f){
+          if(txEntry < 0f){
             if(transform.position.x + collider.width < transform2.position.x){
               continue;
             }

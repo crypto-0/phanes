@@ -77,7 +77,7 @@ public class Scene1 extends Scene{
     runEntityState.addComponent(new Animation(assetManager.getSpriteSheet("run"),2));
     runEntityState.addComponent(new RunState());
     EntityState idleEntityState = new EntityState();
-    idleEntityState.addComponent(new Animation(assetManager.getSpriteSheet("idle"),2));
+    idleEntityState.addComponent(new Animation(assetManager.getSpriteSheet("idle"),1));
     idleEntityState.addComponent(new IdleState());
     EntityState attackEntityState = new EntityState();
     attackEntityState.addComponent(new Animation(assetManager.getSpriteSheet("roll"),2));
