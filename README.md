@@ -11,11 +11,11 @@
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/crypto-0/bolt">View Demo</a>
+    <a href="https://github.com/crypto-0/com.rdebernard.theses">View Demo</a>
     ·
-    <a href="https://github.com/crypto-0/bolt/issues">Report Bug</a>
+    <a href="https://github.com/crypto-0/com.rdebernard.theses/issues">Report Bug</a>
     ·
-    <a href="https://github.com/crypto-0/bolt/pulls">Request Feature</a>
+    <a href="https://github.com/crypto-0/com.rdebernard.theses/pulls">Request Feature</a>
   </p>
 </div>
 
@@ -71,7 +71,7 @@ Here's why I took on this challenge:
 ### Installation
 1. Clone source code 
     ```sh
-    $ git clone https://github.com/crypto-0/bolt.git
+    $ git clone https://github.com/crypto-0/com.rdebernard.theses.git
     ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -80,11 +80,11 @@ Here's why I took on this challenge:
 
 1. Compile java source code 
     ```sh
-    $ javac -d target -sourcepath . src/main/java/bolt/*.java src/main/java/bolt/components/*.java src/main/java/bolt/sytems/*.java src/main/java/bolt/scenes/*.java  src/main/java/bolt/Bolt.java
+    $ javac -d target -sourcepath . src/main/java/com.rdebernard.theses/*.java src/main/java/com.rdebernard.theses/components/*.java src/main/java/com.rdebernard.theses/sytems/*.java src/main/java/com.rdebernard.theses/scenes/*.java  src/main/java/com.rdebernard.theses/Bolt.java
     ```
 2. Run the created java package
     ```sh
-   $ java -cp src/main/resources/:target/ bolt.Bol
+   $ java -cp src/main/resources/:target/ com.rdebernard.theses.Bol
     ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
