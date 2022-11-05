@@ -3,6 +3,7 @@ import java.util.Map;
 import java.util.UUID;
 import com.rdebernard.theses.components.Component;
 import com.rdebernard.theses.scenes.*;
+import com.rdebernard.theses.managers.*;
 
 public class World{
   private final ComponentManager componentManager;
@@ -65,11 +66,11 @@ public class World{
     return componentManager.getComponent(entityId,componentClass);
   }
 
-  public void addSystem(com.rdebernard.theses.sytems.System sytem){
+  public void addSystem(com.rdebernard.theses.systems.System sytem){
     systemManager.addSystem(sytem);
   }
 
-  public <T extends com.rdebernard.theses.sytems.System> T getSystem(Class<T> systemClass){
+  public <T extends com.rdebernard.theses.systems.System> T getSystem(Class<T> systemClass){
     return systemManager.getSystem(systemClass);
   }
 

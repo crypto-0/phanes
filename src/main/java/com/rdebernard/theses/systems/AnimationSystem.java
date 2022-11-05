@@ -1,4 +1,4 @@
-package com.rdebernard.theses.sytems;
+package com.rdebernard.theses.systems;
 import java.util.Map;
 import java.util.UUID;
 import com.rdebernard.theses.components.Animation;

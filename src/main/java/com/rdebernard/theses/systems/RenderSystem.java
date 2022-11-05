@@ -1,4 +1,4 @@
-package com.rdebernard.theses.sytems;
+package com.rdebernard.theses.systems;
 import com.rdebernard.theses.Entity;
 import com.rdebernard.theses.World;
 import com.rdebernard.theses.components.Collider;

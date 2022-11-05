@@ -80,7 +80,7 @@ Here's why I took on this challenge:
 
 1. Compile java source code 
     ```sh
-    $ javac -d target -sourcepath . src/main/java/com.rdebernard.theses/*.java src/main/java/com.rdebernard.theses/components/*.java src/main/java/com.rdebernard.theses/sytems/*.java src/main/java/com.rdebernard.theses/scenes/*.java  src/main/java/com.rdebernard.theses/Bolt.java
+    $ javac -d target -sourcepath . src/main/java/com.rdebernard.theses/*.java src/main/java/com.rdebernard.theses/components/*.java src/main/java/com.rdebernard.theses/systems/*.java src/main/java/com.rdebernard.theses/scenes/*.java  src/main/java/com.rdebernard.theses/Bolt.java
     ```
 2. Run the created java package
     ```sh

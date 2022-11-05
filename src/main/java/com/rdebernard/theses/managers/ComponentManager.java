@@ -1,4 +1,4 @@
-package com.rdebernard.theses;
+package com.rdebernard.theses.managers;
 
 import java.util.HashMap;
 import java.util.Map;
