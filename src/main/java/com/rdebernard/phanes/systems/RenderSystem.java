@@ -14,6 +14,7 @@ import java.util.PriorityQueue;
 import java.util.UUID;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
 public class RenderSystem extends System{
   private BufferedImage bufferedImage;
@@ -41,7 +42,7 @@ public class RenderSystem extends System{
     if(Display.buffer == null)return;
     Graphics2D g2d = Display.buffer.createGraphics(); 
     g2d.setColor(Color.white);
-    g2d.fillRect(0, 0, 800, 800);
+    g2d.fillRect(0, 0, Display.buffer.getWidth(),Display.buffer.getHeight());
     for(Entity entity: entities.values()){
       SpriteRenderer spriteRenderer = world.getComponent(entity.id,SpriteRenderer.class);
       if(spriteRenderer == null)continue;
@@ -66,12 +67,23 @@ public class RenderSystem extends System{
         //g2d.drawRect(x ,y,collider.width,collider.height);
         //}
         if(scalex < 0){
-          g2d.drawImage(spriteRenderer.sprite.img,x + (spriteW * -1),y,spriteW,spriteH,null);
+          AffineTransform at = AffineTransform.getTranslateInstance(x + (spriteW * -1),y);
+          at.scale(scalex, scaley);
+          at.translate(spriteW, 0);
+          at.rotate(Math.toRadians(transform.rotation.z),spriteW/2,spriteH/2);
+          //g2d.drawImage(spriteRenderer.sprite.img,x + (spriteW * -1),y,spriteW,spriteH,null);
+          g2d.drawImage(spriteRenderer.sprite.img,at,null);
         }
         else{
-          g2d.drawImage(spriteRenderer.sprite.img,x,y,spriteW,spriteH,null);
+          AffineTransform at = AffineTransform.getTranslateInstance(x,y);
+          at.scale(scalex, scaley);
+          at.rotate(Math.toRadians(transform.rotation.z),spriteW/2,spriteH/2);
+         // g2d.rotate(Math.toRadians(transform.rotation.z),spriteW/2,spriteH/2);
+          //g2d.drawImage(spriteRenderer.sprite.img,x,y,spriteW,spriteH,null);
+          g2d.drawImage(spriteRenderer.sprite.img,at,null);
         }
       }
     }
+    g2d.dispose();
 	}
 }

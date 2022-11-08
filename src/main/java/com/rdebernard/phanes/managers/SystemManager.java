@@ -29,6 +29,9 @@ public class SystemManager{
     }
     return className.cast(system);
   }
+  public <T extends com.rdebernard.phanes.systems.System> void removeSystem(Class<T> className){
+    systems.remove(className);
+  }
 
   public void update(float dt){
     for(System system : systems.values()){

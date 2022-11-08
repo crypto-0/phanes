@@ -8,10 +8,10 @@ import com.rdebernard.phanes.scenes.Scene;
 public class SceneManager{
   World world;
   Map<String,Scene> scenes;
-  Scene currentScene;
-  public SceneManager(World world){
+  Map<String,Scene> activeScenes;
+  public SceneManager(){
     scenes = new HashMap<>();
-    this.world = world;
+    activeScenes = new HashMap<>();
   };
   public void addScene(String sceneName, Scene scene){
     scenes.put(sceneName, scene);
@@ -20,17 +20,33 @@ public class SceneManager{
     Scene scene= scenes.get(sceneName);
     if(scene !=null){
       scenes.remove(sceneName);
-      if(scene == currentScene) currentScene = null;
+      activeScenes.remove(sceneName);
       scene.onDestroy();
     }
   }
-  public void loadScene(String sceneName){
+  public void loadScene(String sceneName,Boolean additive){
     Scene scene = scenes.get(sceneName);
     if(scene !=null){
-      world.clear();
-      if(currentScene != null) currentScene.onDeactivate();
-      currentScene = scene;
-      currentScene.onActivate();
+      if( additive){
+        if(activeScenes.containsKey(sceneName)){
+          activeScenes.get(sceneName).onDeactivate();
+        }
+        activeScenes.put(sceneName, scene);
+        scene.onActivate();
+      }
+      else{
+        for(Scene activeScene: activeScenes.values()){
+          activeScene.onDeactivate();
+        }
+        activeScenes.clear();
+        activeScenes.put(sceneName,scene);
+        scene.onActivate();
+      }
+    }
+  }
+  public void update(float dt){
+    for(Scene activeScene: activeScenes.values()){
+      activeScene.update(dt);
     }
   }
 }

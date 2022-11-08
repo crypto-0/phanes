@@ -9,4 +9,7 @@ public abstract class Scene{
   public abstract void onDestroy();
   public abstract void onActivate();
   public abstract void onDeactivate();
+  public void update(float dt){
+    world.update(dt);
+  }
 }
