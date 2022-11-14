@@ -1,18 +1,16 @@
-package com.rdebernard.phanes.managers;
-import com.rdebernard.phanes.systems.System;
-import com.rdebernard.phanes.World;
+package com.rdebernard.phanes.entities;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
 public class SystemManager{
-  private Map<Class<?>,System> systems = new LinkedHashMap<>();
+  private Map<Class<?>,SystemBase> systems = new LinkedHashMap<>();
   private Logger logger = Logger.getLogger(SystemManager.class.getName());
   private World world;
   public SystemManager(World world){
     this.world = world;
   }
-  public void addSystem(System system){
+  public void addSystem(SystemBase system){
     if(systems.containsKey(system.getClass())){
       logger.warning("Registring " + system.getClass().getName() +  "more than once.");
       return;
@@ -21,21 +19,21 @@ public class SystemManager{
     systems.put(system.getClass(),system);
   }
 
-  public <T extends System> T getSystem(Class<T> className){
-    System system = systems.get(className);
+  public <T extends SystemBase> T getSystem(Class<T> className){
+    SystemBase system = systems.get(className);
     if(system == null){
       logger.warning("Attempting to get unregister system " + className.getName());
       return null;
     }
     return className.cast(system);
   }
-  public <T extends com.rdebernard.phanes.systems.System> void removeSystem(Class<T> className){
+  public <T extends SystemBase> void removeSystem(Class<T> className){
     systems.remove(className);
   }
 
   public void update(float dt){
-    for(System system : systems.values()){
-      system.update(dt);
+    for(SystemBase systemBase : systems.values()){
+      systemBase.update(dt);
     }
   }
 

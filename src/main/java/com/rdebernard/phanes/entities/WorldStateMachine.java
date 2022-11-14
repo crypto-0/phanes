@@ -1,7 +1,6 @@
-package com.rdebernard.phanes;
+package com.rdebernard.phanes.entities;
 import java.util.HashMap;
 import java.util.Map;
-import com.rdebernard.phanes.systems.System;
 
 public class WorldStateMachine{
   private Map<String,WorldState> states;
@@ -28,13 +27,13 @@ public class WorldStateMachine{
     if(newState != null){
       if(newState == currentState)return;
       if(currentState !=null){
-        Map<Class<? extends System>,System> systems = currentState.getAllSystems();
-        for(Class<? extends com.rdebernard.phanes.systems.System> systemClass: systems.keySet()){
-          world.removeSystem(systemClass);
+        Map<Class<? extends SystemBase>,SystemBase> systems = currentState.getAllSystems();
+        for(Class<? extends SystemBase> systemClass: systems.keySet()){
+          world.systemManager.removeSystem(systemClass);
         }
       }
-      for(System system: newState.getAllSystems().values()){
-        world.addSystem(system);
+      for(SystemBase system: newState.getAllSystems().values()){
+        world.systemManager.addSystem(system);
       }
       currentState = newState;
     }

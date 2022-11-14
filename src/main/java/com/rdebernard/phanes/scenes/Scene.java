@@ -1,5 +1,5 @@
 package com.rdebernard.phanes.scenes;
-import com.rdebernard.phanes.World;
+import com.rdebernard.phanes.entities.World;
 
 public abstract class Scene{
   protected World world;
@@ -10,6 +10,6 @@ public abstract class Scene{
   public abstract void onActivate();
   public abstract void onDeactivate();
   public void update(float dt){
-    world.update(dt);
+    world.systemManager.update(dt);
   }
 }

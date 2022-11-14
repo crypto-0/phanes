@@ -1,18 +1,16 @@
-package com.rdebernard.phanes;
+package com.rdebernard.phanes.entities;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-import com.rdebernard.phanes.components.Component;
 
 public class EntityStateMachine{
   private Map<String,EntityState> states;
   private World world;
-  private UUID entityId;
+  private Entity entity;
   private EntityState currentState ;
-  public EntityStateMachine(World world,UUID entityId){
+  public EntityStateMachine(World world,Entity entity){
     this.states = new HashMap<String,EntityState>();
     this.world = world;
-    this.entityId = entityId;
+    this.entity = entity;
   }
 
   public EntityState createEntityState(String name){
@@ -33,11 +31,11 @@ public class EntityStateMachine{
       if(currentState !=null){
         Map<Class<? extends Component>,Component> components = currentState.getAllComponent();
         for(Class<? extends Component> componentClass: components.keySet()){
-          world.removeComponent(entityId,componentClass);
+          world.componentManager.removeComponent(entity,componentClass);
         }
       }
       for(Component component: newState.getAllComponent().values()){
-        world.addComponent(entityId, component);
+        world.componentManager.addComponent(entity, component);
       }
       currentState = newState;
     }

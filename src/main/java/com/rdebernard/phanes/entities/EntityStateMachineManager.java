@@ -1,5 +1,4 @@
-package com.rdebernard.phanes.managers;
-import com.rdebernard.phanes.*;
+package com.rdebernard.phanes.entities;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -13,9 +12,9 @@ public class EntityStateMachineManager{
     this.entityStateMachines = new HashMap<>();
   }
 
-  public EntityStateMachine createStateMachine(UUID entityId){
-    EntityStateMachine entityStateMachine = new EntityStateMachine(world, entityId);
-    entityStateMachines.put(entityId,entityStateMachine) ;
+  public EntityStateMachine createStateMachine(Entity entity){
+    EntityStateMachine entityStateMachine = new EntityStateMachine(world, entity);
+    entityStateMachines.put(entity.id,entityStateMachine) ;
     return entityStateMachine;
   }
 
@@ -23,12 +22,12 @@ public class EntityStateMachineManager{
    entityStateMachines.remove(entityId); 
   }
 
-  public EntityStateMachine getStateMachine(UUID entityId){
-    return entityStateMachines.get(entityId);
+  public EntityStateMachine getStateMachine(Entity entity){
+    return entityStateMachines.get(entity.id);
   }
 
-  public void entityRemoved(UUID entityId){
-    entityStateMachines.remove(entityId);
+  public void entityRemoved(Entity entity){
+    entityStateMachines.remove(entity.id);
   }
 
   public void clearStateMachines(){

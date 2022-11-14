@@ -1,7 +1,6 @@
-package com.rdebernard.phanes;
+package com.rdebernard.phanes.entities;
 import java.util.HashMap;
 import java.util.Map;
-import com.rdebernard.phanes.components.Component;
 public class EntityState{
   Map<Class<? extends Component>,Component> components;
   public EntityState(){

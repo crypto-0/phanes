@@ -1,9 +1,7 @@
-package com.rdebernard.phanes.managers;
-import com.rdebernard.phanes.*;
+package com.rdebernard.phanes.scenes;
+import com.rdebernard.phanes.entities.*;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.rdebernard.phanes.scenes.Scene;
 
 public class SceneManager{
   World world;
