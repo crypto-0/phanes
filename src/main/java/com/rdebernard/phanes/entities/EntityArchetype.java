@@ -1,12 +1,16 @@
 package com.rdebernard.phanes.entities;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class  EntityArchetype{
   private HashSet<Class<? extends Component>> componentTypes;
+  private HashMap<Class<? extends Component>,EntityArchetypeEdge> edges;
   @SafeVarargs
   public EntityArchetype(Class<? extends Component>... componentTypes){
     this.componentTypes = new HashSet<>();
+    this.edges = new HashMap<>();
     for (Class<? extends Component> componentType: componentTypes){
       if(componentType ==null)continue;
       this.componentTypes.add(componentType);
@@ -19,22 +23,25 @@ public class  EntityArchetype{
       this.componentTypes.add(componentType);
     }
   }
+  public EntityArchetypeEdge getEntityArchetypeEdge(Class<? extends Component> componentType){
+    if(!edges.containsKey(componentType)){
+      edges.put(componentType,new EntityArchetypeEdge());
+    }
+    return edges.get(componentType);
+  }
   public boolean containAll(ArrayList<Class<? extends Component>> componentTypes){
-    if(componentTypes == null) return false;
     for(Class<? extends Component> component: componentTypes){
       if(!this.componentTypes.contains(component))return false;
     }
     return true;
   }
-  final public boolean containAny(ArrayList<Class<? extends Component>> componentTypes){
-    if(componentTypes == null) return false;
+  public boolean containAny(ArrayList<Class<? extends Component>> componentTypes){
     for(Class<? extends Component> component: componentTypes){
       if(this.componentTypes.contains(component))return true;
     }
     return false;
   }
-  final public boolean containNone(ArrayList<Class<? extends Component>> componentTypes){
-    if(componentTypes == null) return true;
+  public boolean containNone(ArrayList<Class<? extends Component>> componentTypes){
     for(Class<? extends Component> component: componentTypes){
       if(this.componentTypes.contains(component))return false;
     }
@@ -42,9 +49,16 @@ public class  EntityArchetype{
   }
   public ArrayList<Class<? extends Component>> getComponentTypes(){
     ArrayList<Class<? extends Component>> allComponentTypes = new ArrayList<>();
-    this.componentTypes.forEach(ct ->{
+    this.componentTypes.forEach(ct->{
       allComponentTypes.add(ct);
     });
+    return allComponentTypes;
+  }
+  public ArrayList<Class<? extends Component>> getComponentTypesExclude(Class<? extends Component> componentType){
+    ArrayList<Class<? extends Component>> allComponentTypes = this.componentTypes.stream().filter(ct->{
+      return !ct.equals(componentType);
+    }).collect(Collectors.toCollection(ArrayList::new));
+    
     return allComponentTypes;
   }
   @Override

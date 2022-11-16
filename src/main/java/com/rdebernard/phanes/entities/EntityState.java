@@ -1,4 +1,5 @@
 package com.rdebernard.phanes.entities;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 public class EntityState{
@@ -15,7 +16,7 @@ public class EntityState{
   public <T extends Component> void removeComponent(Class<T> componentClass){
     components.remove(componentClass);
   }
-  public Map<Class<? extends Component>,Component> getAllComponent(){
-    return this.components;
+  public ArrayList<Component> getAllComponent(){
+    return new ArrayList<Component>(this.components.values());
   }
 }

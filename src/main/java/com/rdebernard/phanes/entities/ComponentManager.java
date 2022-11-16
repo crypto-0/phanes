@@ -1,97 +1,62 @@
 package com.rdebernard.phanes.entities;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Logger;
-import java.lang.Integer;
 
 public class ComponentManager{
-  private Map<Class<?>,Integer> componentTypes ;
-  private Map<Integer,Map<UUID,Component>> components;
+  private Map<Class<? extends Component>,Map<Entity,Component>> components;
   private World world;
   private Logger logger; 
   public ComponentManager(World world){
-  componentTypes = new HashMap<Class<?>,Integer>();
-  components = new HashMap<Integer,Map<UUID,Component>>();
-  this.world = world;
-  logger = Logger.getLogger(ComponentManager.class.getName());
-  }
-  public <T extends Component> void registerComponent(Class<T> componentClass){
-    if(componentTypes.get(componentClass)!= null){
-      logger.warning("Registering component type" + componentClass.getName() + " more than once.");
-      return;
-    }
-    componentTypes.put(componentClass, componentTypes.size() + 1);
-    components.put(componentTypes.size(), new HashMap<UUID,Component>());
+    components = new HashMap<>();
+    this.world = world;
+    logger = Logger.getLogger(ComponentManager.class.getName());
   }
 
-  public < T extends Component> void addComponent(Entity entity,Component component){
-    Integer componentType;
-    componentType = componentTypes.get(component.getClass());
-    if(componentType == null){
+  @SafeVarargs
+  final public void registerComponents(Class<? extends Component>... componentsType){
+    for(Class<? extends Component> componentType: componentsType){
+      if(this.components.containsKey(componentType)){
+        logger.warning("Registering component type" + componentType.getName() + " more than once.");
+        continue;
+      }
+      components.put(componentType, new HashMap<Entity,Component>());
+    }
+  }
+
+  public void addComponent(Entity entity,Component component){
+    if(!this.components.containsKey(component.getClass())){
       logger.warning("Attempting to add unregister component " + component.getClass().getName());
       return;
     }
-    components.get(componentType).put(entity.id, component);
-    world.entityManager.componentAdded(entity, component);
-  }
-  public < T extends Component> void addComponents(Entity entity,ArrayList<Component> componentList){
-    Integer componentType;
-    for(Component component: componentList){
-      componentType = componentTypes.get(component.getClass());
-      if(componentType == null){
-        logger.warning("Attempting to add unregister component " + component.getClass().getName());
-        continue;
-      }
-      this.components.get(componentType).put(entity.id,component);
-    }
-    world.entityManager.componentsAdded(entity,componentList);
+    this.components.get(component.getClass()).put(entity,component);
+    world.entityManager.componentAdded(entity,component.getClass());
   }
 
-
-  public < T extends Component> void removeComponent(Entity entity,Class<T> componentClass){
-    Integer componentType;
-    componentType = componentTypes.get(componentClass);
-    if(componentType == null){
-      logger.warning("Attempting to remove unregister component " + componentClass.getName());
+  public void removeComponent(Entity entity,Class< ? extends Component> componentType){
+    if(!this.components.containsKey(componentType.getClass())){
+      logger.warning("Attempting to remove unregister component " + componentType.getName());
       return;
     }
-    components.get(componentType).remove(entity.id);
-  }
-  public < T extends Component> void removeComponents(Entity entity,ArrayList<Component> componentList){
-    Integer componentType;
-    for(Component component: componentList){
-      componentType = componentTypes.get(component.getClass());
-      if(componentType == null){
-        logger.warning("Attempting to remove unregister component " + component.getClass().getName());
-        continue;
-      }
-      this.components.get(componentType).remove(entity.id);
-    }
-    world.entityManager.componentsRemoved(entity,componentList);
+    this.components.get(componentType).remove(entity);
+    world.entityManager.componentRemoved(entity,componentType);
   }
 
-  public <T extends Component> T getComponent(Entity entity,Class<T> componentClass){
-    Integer componentType;
-    componentType = componentTypes.get(componentClass);
-    if(componentType == null){
-      logger.warning("Attempting to get unregister component " + componentClass.getName());
+  public <T extends Component> T getComponent(Entity entity,Class<T> componentType){
+    if(!components.containsKey(componentType)){
+      logger.warning("Attempting to get unregister component " + componentType.getName());
       return null;
     }
-    Component component = components.get(componentType).get(entity.id);
-    return componentClass.cast(component);
+    return componentType.cast(components.get(componentType).get(entity));
   }
 
   public void entityRemoved(Entity entity){
-    for(Integer componentType: componentTypes.values()){
-      components.get(componentType).remove(entity.id);
-    }
+    components.keySet().stream().forEach(cp->{
+      components.get(cp).remove(entity);
+    });
   }
 
   public void clearComponents(){
-    componentTypes.clear();
     components.clear();
   }
-
 }

@@ -7,14 +7,13 @@ import java.util.Map;
 
 public class EntityManager{
   private final Map<EntityArchetype,HashSet<Entity>> entities;
-  private final HashSet<EntityArchetype> entityArchetypes;
+  private final Map<Entity,EntityArchetype> entityArchetypes;
   private final World world;
 
   public EntityManager(World world){
     entities = new HashMap<EntityArchetype,HashSet<Entity>>();
-    entityArchetypes = new HashSet<>();
+    entityArchetypes = new HashMap<>();
     EntityArchetype entityArchetype = new EntityArchetype();
-    entityArchetypes.add(entityArchetype);
     entities.put(entityArchetype,new HashSet<Entity>());
     this.world = world;
   }
@@ -22,153 +21,100 @@ public class EntityManager{
     Entity entity = new Entity();
     EntityArchetype entityArchetype = new EntityArchetype();
     entities.get(entityArchetype).add(entity);
+    entityArchetypes.put(entity,entityArchetype);
     return entity;
   }
   public Entity createEntity(EntityArchetype entityArchetype){
     Entity entity = new Entity();
-    if(!entityArchetypes.contains(entityArchetype)){
-      entityArchetypes.add(entityArchetype);
+    if(!entities.containsKey(entityArchetype)){
+      entities.put(entityArchetype,new HashSet<>());
     }
     entities.get(entityArchetype).add(entity);
-    ArrayList<Component> components = new ArrayList<>();
-    for(Class<? extends Component> componentType: entityArchetype.getComponentTypes()){
+    entityArchetypes.put(entity,entityArchetype);
+    entityArchetype.getComponentTypes().stream().forEach(ct->{
       try{
-        components.add(componentType.getConstructor().newInstance());
+        world.componentManager.addComponent(entity,ct.getConstructor().newInstance());
       }
       catch(Exception e){
-        System.out.println("Failed to create component of " +componentType.getTypeName());
+        System.out.println("Failed to create component of " + ct.getTypeName());
       }
-    }
-    world.componentManager.addComponents(entity,components);
+
+    });
     return entity;
 
   }
   @SafeVarargs
   final public EntityArchetype createArchetype(Class<? extends Component>... componentTypes){
     EntityArchetype entityArchetype =  new EntityArchetype(componentTypes);
-    if(!entityArchetypes.contains(entityArchetype)){
-      entityArchetypes.add(entityArchetype);
+    if(!entities.containsKey(entityArchetype)){
+      entities.put(entityArchetype,new HashSet<Entity>());
     }
     return entityArchetype;
   }
-  final public EntityArchetype createArchetype(ArrayList<Class<? extends Component>> componentTypes){
+  public EntityArchetype createArchetype(ArrayList<Class<? extends Component>> componentTypes){
     EntityArchetype entityArchetype =  new EntityArchetype(componentTypes);
-    if(!entityArchetypes.contains(entityArchetype)){
-      entityArchetypes.add(entityArchetype);
+    if(!entities.containsKey(entityArchetype)){
+      entities.put(entityArchetype,new HashSet<Entity>());
     }
     return entityArchetype;
   }
-
   public void removeEntity(Entity entity){
-    for(EntityArchetype archetype: entities.keySet()){
-      if(entities.get(archetype).contains(entity)){
-        entities.get(archetype).remove(entity);
-        return;
-      }
-    }
+    EntityArchetype entityArchetype = entityArchetypes.get(entity);
+    if(entityArchetype == null)return;
+    entities.get(entityArchetype).remove(entity);
   }
   public ArrayList<EntityArchetype> getEntityArchetypes(){
-    ArrayList<EntityArchetype> archetypes = new ArrayList<>();
-    for(EntityArchetype archetype: entityArchetypes){
-      archetypes.add(archetype);
-    }
+    ArrayList<EntityArchetype> archetypes = new ArrayList<>(entities.keySet());
     return archetypes;
   }
   public ArrayList<Entity> getEntities(){
     ArrayList<Entity> allEntities = new ArrayList<>();
-    for(EntityArchetype archetype: entityArchetypes){
-      for(Entity entity: entities.get(archetype)){
-        allEntities.add(entity);
-      }
-    }
+    entities.values().stream().forEach(at->{
+      at.stream().forEach(e->{
+        allEntities.add(e);
+      });
+    });
     return allEntities;
   }
   public ArrayList<Entity> getEntities(EntityArchetype entityArchetype){
     ArrayList<Entity> allEntities = new ArrayList<>();
-    HashSet<Entity> entitiesOfArchetype = entities.get(entityArchetype);
-    if(entitiesOfArchetype !=null){
-      for(Entity entity: entities.get(entityArchetype)){
-        allEntities.add(entity);
-      }
-      return allEntities;
-    }
-    else return null;
+    if(!entities.containsKey(entityArchetype))return allEntities;
+    entities.get(entityArchetype).stream().forEach(e->{
+      allEntities.add(e);
+    });
+    return allEntities;
   }
-  public void componentAdded(Entity entity,Component component){
-    for(EntityArchetype entityArchetype: entities.keySet()){
-      if(entities.get(entityArchetype).contains(entity)){
-        ArrayList<Class<? extends Component>> entityComponentTypes = entityArchetype.getComponentTypes();
-        entityComponentTypes.add(component.getClass());
-        EntityArchetype newArchetype = new EntityArchetype(entityComponentTypes);
-        if(entityArchetypes.contains(newArchetype)){
-          entities.get(newArchetype).add(entity);
-        }
-        else{
-          entityArchetypes.add(newArchetype);
-          entities.put(newArchetype,new HashSet<Entity>());
-          entities.get(entityArchetype).add(entity);
-        }
-        return;
-      }
-    }
-
-  }
-  public void componentsAdded(Entity entity,ArrayList<Component> componentList){
-    for(EntityArchetype entityArchetype: entities.keySet()){
-      if(entities.get(entityArchetype).contains(entity)){
-        ArrayList<Class<? extends Component>> entityComponentTypes = entityArchetype.getComponentTypes();
+  public void componentAdded(Entity entity,Class<? extends Component> componentType){
+    EntityArchetype entityArchetype = entityArchetypes.get(entity);
+    if(entityArchetype !=null){
+      EntityArchetypeEdge entityArchetypeEdge = entityArchetype.getEntityArchetypeEdge(componentType);
+      if(entityArchetypeEdge.add !=null){
         entities.get(entityArchetype).remove(entity);
-        for(Component component: componentList){
-          entityComponentTypes.add(component.getClass());
-        }
-        EntityArchetype newArchetype = new EntityArchetype(entityComponentTypes);
-        if(entityArchetypes.contains(newArchetype)){
-          entities.get(newArchetype).add(entity);
-        }
-        else{
-          entityArchetypes.add(newArchetype);
-          entities.put(newArchetype,new HashSet<Entity>());
-          entities.get(entityArchetype).add(entity);
-        }
-        return;
+        entities.get(entityArchetypeEdge.add).add(entity);
+      }
+      else{
+        ArrayList<Class<? extends Component>> archetypeComponents = entityArchetype.getComponentTypesExclude(componentType);
+        EntityArchetype newEntityArchetype  = createArchetype(archetypeComponents);
+        entityArchetypeEdge.add = newEntityArchetype;
+        entities.get(entityArchetype).remove(entity);
+        entities.get(newEntityArchetype).add(entity);
       }
     }
   }
-  public void componentRemoved(Entity entity,Component component){
-    for(EntityArchetype entityArchetype: entities.keySet()){
-      if(entities.get(entityArchetype).contains(entity)){
-        ArrayList<Class<? extends Component>> entityComponentTypes = entityArchetype.getComponentTypes();
-        entityComponentTypes.remove(component.getClass());
-        EntityArchetype newArchetype = new EntityArchetype(entityComponentTypes);
-        if(entityArchetypes.contains(newArchetype)){
-          entities.get(newArchetype).add(entity);
-        }
-        else{
-          entityArchetypes.add(newArchetype);
-          entities.put(newArchetype,new HashSet<Entity>());
-          entities.get(entityArchetype).add(entity);
-        }
-        return;
+  public void componentRemoved(Entity entity,Class<? extends Component> componentType){
+    EntityArchetype entityArchetype = entityArchetypes.get(entity);
+    if(entityArchetype !=null){
+      EntityArchetypeEdge entityArchetypeEdge = entityArchetype.getEntityArchetypeEdge(componentType);
+      if(entityArchetypeEdge.remove !=null){
+        entities.get(entityArchetype).remove(entity);
+        entities.get(entityArchetypeEdge.remove).add(entity);
       }
-    }
-  }
-  public void componentsRemoved(Entity entity,ArrayList<Component> componentList){
-    for(EntityArchetype entityArchetype: entities.keySet()){
-      if(entities.get(entityArchetype).contains(entity)){
-        ArrayList<Class<? extends Component>> entityComponentTypes = entityArchetype.getComponentTypes();
-        for(Component component: componentList){
-          entityComponentTypes.remove(component.getClass());
-        }
-        EntityArchetype newArchetype = new EntityArchetype(entityComponentTypes);
-        if(entityArchetypes.contains(newArchetype)){
-          entities.get(newArchetype).add(entity);
-        }
-        else{
-          entityArchetypes.add(newArchetype);
-          entities.put(newArchetype,new HashSet<Entity>());
-          entities.get(entityArchetype).add(entity);
-        }
-        return;
+      else{
+        ArrayList<Class<? extends Component>> archetypeComponents = entityArchetype.getComponentTypesExclude(componentType);
+        EntityArchetype newEntityArchetype  = createArchetype(archetypeComponents);
+        entityArchetypeEdge.remove = newEntityArchetype;
+        entities.get(entityArchetype).remove(entity);
+        entities.get(newEntityArchetype).add(entity);
       }
     }
   }

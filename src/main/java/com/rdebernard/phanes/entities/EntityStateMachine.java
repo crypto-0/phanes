@@ -29,14 +29,13 @@ public class EntityStateMachine{
     if(newState != null){
       if(newState == currentState)return;
       if(currentState !=null){
-        Map<Class<? extends Component>,Component> components = currentState.getAllComponent();
-        for(Class<? extends Component> componentClass: components.keySet()){
-          world.componentManager.removeComponent(entity,componentClass);
-        }
+        currentState.getAllComponent().stream().forEach(c->{
+          world.componentManager.removeComponent(this.entity,c.getClass());
+        });
       }
-      for(Component component: newState.getAllComponent().values()){
-        world.componentManager.addComponent(entity, component);
-      }
+      newState.getAllComponent().stream().forEach(c->{
+        world.componentManager.addComponent(entity,c);
+      });
       currentState = newState;
     }
   }

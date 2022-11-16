@@ -7,7 +7,7 @@ public class World{
   public final SystemManager systemManager;
   public final EntityStateMachineManager entityStateMachineManager;
   private final WorldStateMachine worldStateMachine;
-  static final SceneManager sceneManager = new SceneManager();
+  public static final SceneManager sceneManager = new SceneManager();
   public World(){
     componentManager = new ComponentManager(this);
     entityManager = new EntityManager(this);

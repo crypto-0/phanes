@@ -15,20 +15,19 @@ public class SystemManager{
       logger.warning("Registring " + system.getClass().getName() +  "more than once.");
       return;
     }
-      //T system = systeClass.getDeclaredConstructor(World.class).newInstance(this.world);
     systems.put(system.getClass(),system);
   }
 
-  public <T extends SystemBase> T getSystem(Class<T> className){
-    SystemBase system = systems.get(className);
+  public <T extends SystemBase> T getSystem(Class<T> systemType){
+    SystemBase system = systems.get(systemType);
     if(system == null){
-      logger.warning("Attempting to get unregister system " + className.getName());
+      logger.warning("Attempting to get unregister system " + systemType.getName());
       return null;
     }
-    return className.cast(system);
+    return systemType.cast(system);
   }
-  public <T extends SystemBase> void removeSystem(Class<T> className){
-    systems.remove(className);
+  public <T extends SystemBase> void removeSystem(Class<T> systemType){
+    systems.remove(systemType);
   }
 
   public void update(float dt){
