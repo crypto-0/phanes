@@ -34,7 +34,7 @@ public class ComponentManager{
   }
 
   public void removeComponent(Entity entity,Class< ? extends Component> componentType){
-    if(!this.components.containsKey(componentType.getClass())){
+    if(!this.components.containsKey(componentType)){
       logger.warning("Attempting to remove unregister component " + componentType.getName());
       return;
     }

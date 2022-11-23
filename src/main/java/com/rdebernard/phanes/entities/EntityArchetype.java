@@ -1,16 +1,13 @@
 package com.rdebernard.phanes.entities;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public class  EntityArchetype{
   private HashSet<Class<? extends Component>> componentTypes;
-  private HashMap<Class<? extends Component>,EntityArchetypeEdge> edges;
   @SafeVarargs
   public EntityArchetype(Class<? extends Component>... componentTypes){
     this.componentTypes = new HashSet<>();
-    this.edges = new HashMap<>();
     for (Class<? extends Component> componentType: componentTypes){
       if(componentType ==null)continue;
       this.componentTypes.add(componentType);
@@ -22,28 +19,32 @@ public class  EntityArchetype{
       if(componentType ==null)continue;
       this.componentTypes.add(componentType);
     }
-  }
-  public EntityArchetypeEdge getEntityArchetypeEdge(Class<? extends Component> componentType){
-    if(!edges.containsKey(componentType)){
-      edges.put(componentType,new EntityArchetypeEdge());
-    }
-    return edges.get(componentType);
+  
   }
   public boolean containAll(ArrayList<Class<? extends Component>> componentTypes){
+    if(componentTypes.isEmpty()) return true;
     for(Class<? extends Component> component: componentTypes){
-      if(!this.componentTypes.contains(component))return false;
+      if(!this.componentTypes.contains(component)){
+        return false;
+      }
     }
     return true;
   }
   public boolean containAny(ArrayList<Class<? extends Component>> componentTypes){
+    if(componentTypes.isEmpty()) return true;
     for(Class<? extends Component> component: componentTypes){
-      if(this.componentTypes.contains(component))return true;
+      if(this.componentTypes.contains(component)){
+        return true;
+      }
     }
     return false;
   }
   public boolean containNone(ArrayList<Class<? extends Component>> componentTypes){
+    if(componentTypes.isEmpty()) return true;
     for(Class<? extends Component> component: componentTypes){
-      if(this.componentTypes.contains(component))return false;
+      if(this.componentTypes.contains(component)){
+        return false;
+      }
     }
     return true;
   }

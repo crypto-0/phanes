@@ -14,31 +14,30 @@ public abstract class  SystemBase{
     private ArrayList<Class<? extends Component>> all;
     private ArrayList<Class<? extends Component>> any;
     private ArrayList<Class<? extends Component>> none;
-    private 
-    EntityQuery(){
+    public EntityQuery(){
       all = new ArrayList<>();
       any = new ArrayList<>();
       none = new ArrayList<>();
       matchedEntities = new HashSet<>();
     }
     @SafeVarargs
-    final public <T extends Component> void  withAll(Class<T>... componentTypes){
+    final public void withAll(Class<? extends Component>... componentTypes){
       all.clear();
-      for(Class<T> componentType: componentTypes){
+      for(Class<? extends Component> componentType: componentTypes){
         all.add(componentType);
       }
     }
     @SafeVarargs
-    final public <T extends Component> void  withAny(Class<T>... componentTypes){
+    final public  void  withAny(Class<? extends Component>... componentTypes){
       any.clear();
-      for(Class<T> componentType: componentTypes){
+      for(Class<? extends Component> componentType: componentTypes){
         any.add(componentType);
       }
     }
     @SafeVarargs
-    final public <T extends Component> void  withNone(Class<T>... componentTypes){
+    final public  void  withNone(Class<? extends Component>... componentTypes){
       none.clear();
-      for(Class<T> componentType: componentTypes){
+      for(Class<? extends Component> componentType: componentTypes){
         none.add(componentType);
       }
     }
@@ -58,6 +57,7 @@ public abstract class  SystemBase{
       }).forEach(entityArchetype->{
         matchedEntities.addAll(world.entityManager.getEntities(entityArchetype));
       });
+      //System.out.println(matchedEntities.size() + ": sizes");
     }
     final public ArrayList<Entity> getEntities(){
       return new ArrayList<>(matchedEntities);
