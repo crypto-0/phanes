@@ -10,12 +10,14 @@ public class Prefab {
     components = new HashMap<>();
   }
   public Prefab(Component... components){
+    this.components = new HashMap<>();
     for(Component component: components){
       if(component == null)continue;
       this.components.put(component.getClass(),component);
     }
   }
   public Prefab(ArrayList<Component> components){
+    this.components = new HashMap<>();
     for(Component component: components){
       if(component == null)continue;
       this.components.put(component.getClass(),component);
