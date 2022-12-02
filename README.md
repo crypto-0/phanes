@@ -8,10 +8,7 @@
   <p align="center">
     An awesome  project that focus on pure entity component system library!
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/crypto-0/com.rdebernard.phanes">View Demo</a>
+    <a href="#tutorial">Tutorial</a>
     ·
     <a href="https://github.com/crypto-0/com.rdebernard.phanes/issues">Report Bug</a>
     ·
@@ -36,6 +33,7 @@
       </ul>
     </li>
     <li><a href="#tutorial">Tutorial</a></li>
+    <li><a href="#projects-using-phanes">projects using phanes</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -165,6 +163,16 @@ public class World{
 ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Projects using phanes
+Flappy Bird
+
+
+<a href="https://github.com/crypto-0/flappybird">
+    <img src="https://github.com/crypto-0/flappybird/blob/master/flappybird.gif?raw=true"> 
+</a>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- LICENSE -->
 ## License
 
@@ -175,8 +183,6 @@ Distributed under the MIT License.
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
 * [State Machine In ECS](https://www.richardlord.net/blog/ecs/finite-state-machines-with-ash.html)
 * [Guided Tutorial On Writing An ECS in C++](https://austinmorlan.com/posts/entity_component_system/)
